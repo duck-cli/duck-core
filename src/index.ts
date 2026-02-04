@@ -2,6 +2,7 @@
 
 import { Command } from "commander"
 import { DuckCommands } from "./commands/DuckCommands.js"
+
 const program: Command = new Command()
 
 program

@@ -1,18 +1,14 @@
 import fg from "fast-glob"
 import path from "node:path"
+import type { ScannedFile } from "../interfaces/interfaces.js"
 
 type SupportedLanguage = "ts" | "tsx" | "js" | "jsx" | "json" | "md" 
 
-interface ScannedFiles {
-    absolutePath: string
-    relativePath: string
-    language: SupportedLanguage
-}
 
 export class Scanner {
     constructor(private readonly rootDir: string){}
     
-    async scanFiles(): Promise<ScannedFiles[]>{
+    async scanFiles(): Promise<ScannedFile[]>{
         const patterns = ["**/*.{ts,tsx,js,jsx,json,md}"]
 
         const ignore = [
