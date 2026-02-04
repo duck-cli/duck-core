@@ -1,5 +1,5 @@
 import { Project } from "ts-morph"
-import type { ProjectFile } from "../interfaces/interfaces.js"
+import type { ProjectFile, SupportedLanguage } from "../interfaces/interfaces.js"
 import type { CodeFeature } from "../interfaces/interfaces.js"
 
 export class AstAnalyzer {
@@ -22,13 +22,15 @@ export class AstAnalyzer {
       for (const cls of sourceFile.getClasses()) {
         features.push({
           file: filePath,
+          languages: sourceFile.getExtension().replace(".", "") as SupportedLanguage,
           kind: "class",
           name: cls.getName() || "UnnamedClass",
           metadata: {
             isExported: cls.isExported(),
             hasDefaultExport: cls.isDefaultExport(),
             isAbstract: cls.isAbstract(),
-            extends: cls.getExtends()?.getExpression().getText() ?? null
+            extends: cls.getExtends()?.getExpression().getText() ?? null,
+            implements: cls.getImplements().map(impl => impl.getText())
           }
         })
       }
@@ -37,6 +39,7 @@ export class AstAnalyzer {
         features.push({
           file: filePath,
           kind: "function",
+          languages: sourceFile.getExtension().replace(".", "") as SupportedLanguage,
           name: func.getName() || "UnnamedFunction",
           metadata: {
             isAsync: func.isAsync(),
@@ -50,6 +53,7 @@ export class AstAnalyzer {
         features.push({
             file: filePath,
             kind: "interface",
+            languages: sourceFile.getExtension().replace(".", "") as SupportedLanguage,
             name: iface.getName() || "UnnamedInterface",
             metadata: {
                 propertiesCount: iface.getProperties().length,
